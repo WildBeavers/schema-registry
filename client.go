@@ -136,21 +136,12 @@ func NewClient(baseURL string, options ...Option) (*Client, error) {
 }
 
 func NewClientWithBasicAuth(baseURL string, user string, pass string, options ...Option) (*Client, error) {
-	baseURL = formatBaseURL(baseURL)
-	if _, err := url.Parse(baseURL); err != nil {
+	c, err := NewClient(baseURL, options...)
+	if err != nil {
 		return nil, err
 	}
 	b := &BasicAuthCredential{Username: user, Password: pass}
-	c := &Client{baseURL: baseURL, basicAuth: b}
-	for _, opt := range options {
-		opt(c)
-	}
-
-	if c.client == nil {
-		httpClient := &http.Client{}
-		UsingClient(httpClient)(c)
-	}
-
+	c.basicAuth = b
 	return c, nil
 }
 
