@@ -18,18 +18,20 @@ var deleteCmd = &cobra.Command{
 
 		subject := args[0]
 
-		prompt := promptui.Prompt{
-			Label: fmt.Sprintf("Warning! You are deleting the subject '%s'. Are you sure", subject),
-			IsConfirm: true,
+		if !noConfirmation {
+			prompt := promptui.Prompt{
+				Label:     fmt.Sprintf("Warning! You are deleting the subject '%s'. Are you sure", subject),
+				IsConfirm: true,
+			}
+
+			_, err := prompt.Run()
+			if err != nil {
+				fmt.Printf("Aborted.\n")
+				return nil
+			}
 		}
 
-		_, err := prompt.Run()
-		if err != nil {
-			fmt.Printf("Aborted.\n")
-			return nil
-		}
-
-		err = deleteSubject(subject)
+		err := deleteSubject(subject)
 		if err != nil {
 			return err
 		}
