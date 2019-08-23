@@ -39,6 +39,7 @@ Flags:
   -n, --no-color     dont color output
   -e, --url string   schema registry url, overrides SCHEMA_REGISTRY_URL (default "http://localhost:8081")
   -v, --verbose      be verbose
+  -y, --yes          skip confirmation dialog
 
 Use "schema-registry-cli [command] --help" for more information about a command.
 ```

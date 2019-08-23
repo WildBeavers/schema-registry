@@ -20,6 +20,7 @@ var (
 	basicAuthPass string
 	verbose       bool
 	nocolor       bool
+	noConfirmation bool
 )
 
 // RootCmd represents the base command when called without any subcommands
@@ -53,6 +54,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&registryURL, "url", "e", schemaregistry.DefaultURL, "schema registry url, overrides SCHEMA_REGISTRY_URL")
 	RootCmd.PersistentFlags().StringVarP(&basicAuthUser, "basic-auth-user", "u", "", "User for basic auth, overrides SCHEMA_REGISTRY_BASIC_AUTH_USER")
 	RootCmd.PersistentFlags().StringVarP(&basicAuthPass, "basic-auth-pass", "p", "", "Password for basic auth, overrides SCHEMA_REGISTRY_BASIC_AUTH_PASS")
+	RootCmd.PersistentFlags().BoolVarP(&noConfirmation, "yes", "y", false, "skip confirmation prompt")
 	viper.SetEnvPrefix("schema_registry")
 	viper.BindPFlag("url", RootCmd.PersistentFlags().Lookup("url"))
 	viper.BindEnv("url")
