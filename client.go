@@ -402,7 +402,7 @@ func (c *Client) Versions(subject string) (versions []int, err error) {
 	return
 }
 
-// DeleteSubject deletes the specified subject and its associated compatibility level if registered.
+// DeleteSubject deletes the specified subject and its associated compatibility type if registered.
 // It is recommended to use this API only when a topic needs to be recycled or in development environment.
 // Returns the versions of the schema deleted under this subject.
 func (c *Client) DeleteSubject(subject string) (versions []int, err error) {
@@ -452,6 +452,18 @@ func (c *Client) IsRegistered(subject, schema string) (bool, Schema, error) {
 	return true, fs, nil
 }
 
+// see https://docs.confluent.io/current/schema-registry/develop/api.html#compatibility
+// for a list of valid compatibility types
+const (
+	BACKWARD            CompatibilityType = "BACKWARD"
+	BACKWARD_TRANSITIVE CompatibilityType = "BACKWARD_TRANSITIVE"
+	FORWARD             CompatibilityType = "FORWARD"
+	FORWARD_TRANSITIVE  CompatibilityType = "FORWARD_TRANSITIVE"
+	FULL                CompatibilityType = "FULL"
+	FULL_TRANSITIVE     CompatibilityType = "FULL_TRANSITIVE"
+	NONE                CompatibilityType = "NONE"
+)
+
 type (
 	schemaOnlyJSON struct {
 		Schema string `json:"schema"`
@@ -476,12 +488,31 @@ type (
 		ID      int `json:"id,omitempty"`
 	}
 
-	// Config describes a subject or globa schema-registry configuration
-	Config struct {
-		// CompatibilityLevel mode of subject or global
-		CompatibilityLevel string `json:"compatibilityLevel"`
+	// CompatibilityType defines the allowed actions for changing a schema
+	CompatibilityType string
+
+	// ConfigGet is the result structure for getting the config
+	// (of a subject or global schema-registry configuration)
+	ConfigGet struct {
+		// CompatibilityType mode of subject or global
+		CompatibilityType CompatibilityType `json:"compatibilityLevel"`
+	}
+
+	// ConfigPut is the parameter structure for setting the config
+	// (of a subject or global schema-registry configuration)
+	ConfigPut struct {
+		// CompatibilityType mode of subject or global
+		CompatibilityType CompatibilityType `json:"compatibility"`
 	}
 )
+
+func (compatibilityType CompatibilityType) IsValid() error {
+	switch compatibilityType {
+	case BACKWARD, BACKWARD_TRANSITIVE, FORWARD, FORWARD_TRANSITIVE, FULL, FULL_TRANSITIVE, NONE:
+		return nil
+	}
+	return fmt.Errorf("compatibility type '%s' is invalid", compatibilityType)
+}
 
 // RegisterNewSchema registers a schema.
 // The returned identifier should be used to retrieve
@@ -617,9 +648,9 @@ func (c *Client) GetLatestSchema(subject string) (Schema, error) {
 
 // getConfigSubject returns the Config of global or for a given subject. It handles 404 error in a
 // different way, since not-found for a subject configuration means it's using global.
-func (c *Client) getConfigSubject(subject string) (Config, error) {
+func (c *Client) getConfigSubject(subject string) (ConfigGet, error) {
 	var err error
-	var config = Config{}
+	var config = ConfigGet{}
 
 	path := fmt.Sprintf("/config/%s", subject)
 	resp, respErr := c.do(http.MethodGet, path, "", nil)
@@ -633,10 +664,39 @@ func (c *Client) getConfigSubject(subject string) (Config, error) {
 	return config, err
 }
 
-// GetConfig returns the configuration (Config type) for global Schema-Registry or a specific
+// setConfigSubject sets the Config of global or for a given subject.
+func (c *Client) setConfigSubject(subject string, config ConfigPut) error {
+	var err error = nil
+
+	if err = config.CompatibilityType.IsValid(); err != nil {
+		return err
+	}
+
+	send, err := json.Marshal(config)
+	if err != nil {
+		return err
+	}
+
+	path := fmt.Sprintf("/config/%s", subject)
+	_, respErr := c.do(http.MethodPut, path, contentTypeSchemaJSON, send)
+	if respErr != nil {
+		return respErr
+	}
+
+	return err
+}
+
+// GetConfig returns the configuration (ConfigGet type) for global Schema-Registry or a specific
 // subject. When Config returned has "compatibilityLevel" empty, it's using global settings.
-func (c *Client) GetConfig(subject string) (Config, error) {
+func (c *Client) GetConfig(subject string) (ConfigGet, error) {
 	return c.getConfigSubject(subject)
+}
+
+// SetConfig set the configuration (ConfigPut type) for global Schema-Registry or a specific
+// subject.
+// https://docs.confluent.io/current/schema-registry/develop/api.html#put--config-(string-%20subject)
+func (c *Client) SetConfig(subject string, config ConfigPut) error {
+	return c.setConfigSubject(subject, config)
 }
 
 // subject (string) – Name of the subject

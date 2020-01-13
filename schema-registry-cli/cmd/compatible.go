@@ -11,8 +11,8 @@ import (
 var compatibleCmd = &cobra.Command{
 	Use:   "compatible <subject> [version]",
 	Short: "tests compatibility between a schema from stdin and a given subject",
-	Long: `The compatibility level of the subject is used for this check.
-If it has never been changed, the global compatibility level applies.
+	Long: `The compatibility type of the subject is used for this check.
+If it has never been changed, the global compatibility type applies.
 If no schema version is specified, the latest version is tested.
 `,
 	RunE: func(cmd *cobra.Command, args []string) error {

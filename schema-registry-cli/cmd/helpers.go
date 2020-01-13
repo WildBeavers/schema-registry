@@ -64,14 +64,14 @@ func getBySubjectVersion(subj string, ver int) error {
 	return nil
 }
 
-func printConfig(cfg schemaregistry.Config, subj string) {
+func printConfig(cfg schemaregistry.ConfigGet, subj string) {
 	if subj == "" {
 		subj = "global"
 	}
-	if cfg.CompatibilityLevel == "" {
-		cfg.CompatibilityLevel = "not defined, using global"
+	if cfg.CompatibilityType == "" {
+		cfg.CompatibilityType = "not defined, using global"
 	}
-	fmt.Printf("%s compatibility-level: %s\n", subj, cfg.CompatibilityLevel)
+	fmt.Printf("%s compatibility type: %s\n", subj, cfg.CompatibilityType)
 }
 
 func getConfig(subj string) error {
