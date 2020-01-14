@@ -1,6 +1,6 @@
 package main
 
-import "github.com/coursehero/schema-registry/schema-registry-cli/cmd"
+import "github.com/WildBeavers/schema-registry/schema-registry-cli/cmd"
 
 func main() {
 	cmd.Execute()

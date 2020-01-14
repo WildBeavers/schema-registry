@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	schemaregistry "github.com/coursehero/schema-registry"
+	schemaregistry "github.com/WildBeavers/schema-registry"
 	"github.com/spf13/cobra"
 )
 

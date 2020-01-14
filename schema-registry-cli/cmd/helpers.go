@@ -10,7 +10,7 @@ import (
 	"github.com/hokaccha/go-prettyjson"
 	"github.com/spf13/viper"
 
-	schemaregistry "github.com/coursehero/schema-registry"
+	schemaregistry "github.com/WildBeavers/schema-registry"
 )
 
 func stdinToString() string {

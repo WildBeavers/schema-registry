@@ -1,4 +1,4 @@
-module github.com/coursehero/schema-registry
+module github.com/WildBeavers/schema-registry
 
 go 1.12
 

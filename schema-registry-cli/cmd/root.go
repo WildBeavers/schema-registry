@@ -10,16 +10,16 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	schemaregistry "github.com/coursehero/schema-registry"
+	schemaregistry "github.com/WildBeavers/schema-registry"
 )
 
 var (
-	cfgFile       string
-	registryURL   string
-	basicAuthUser string
-	basicAuthPass string
-	verbose       bool
-	nocolor       bool
+	cfgFile        string
+	registryURL    string
+	basicAuthUser  string
+	basicAuthPass  string
+	verbose        bool
+	nocolor        bool
 	noConfirmation bool
 )
 
