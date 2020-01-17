@@ -654,8 +654,8 @@ func (c *Client) getConfigSubject(subject string) (ConfigGet, error) {
 
 	path := fmt.Sprintf("/config/%s", subject)
 	resp, respErr := c.do(http.MethodGet, path, "", nil)
-	if respErr != nil && respErr.(ResourceError).ErrorCode != 404 {
-		return config, respErr
+	if respErr != nil && subject != "" && respErr.(ResourceError).ErrorCode != 404 {
+		return c.getConfigSubject("")
 	}
 	if resp != nil {
 		err = c.readJSON(resp, &config)
