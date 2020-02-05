@@ -1,6 +1,6 @@
-module github.com/WildBeavers/schema-registry
+module github.com/wildbeavers/schema-registry
 
-go 1.12
+go 1.13
 
 require (
 	github.com/fatih/color v1.7.0

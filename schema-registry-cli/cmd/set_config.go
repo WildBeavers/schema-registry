@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	schemaregistry "github.com/WildBeavers/schema-registry"
 	"github.com/spf13/cobra"
+	schemaregistry "github.com/wildbeavers/schema-registry"
 )
 
 // constants for parameter names

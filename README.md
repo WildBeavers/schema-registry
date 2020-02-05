@@ -1,18 +1,12 @@
-Schema Registry CLI and client
-==============================================
+# Schema Registry CLI and client
 
 This repository contains a Command Line Interface (CLI) and a Go client for the REST API of Confluent's Kafka Schema Registry.
 
-[![Build Status](https://travis-ci.org/Landoop/schema-registry.svg?branch=master)](https://travis-ci.org/Landoop/schema-registry)
-[![GoDoc](https://godoc.org/github.com/Landoop/schema-registry?status.svg)](https://godoc.org/github.com/Landoop/schema-registry)
-[![Chat](https://img.shields.io/badge/join-%20chat-00BCD4.svg?style=flat-square)](https://slackpass.io/landoop-community)
-
-CLI
----
+## CLI
 
 To install the CLI, assuming a properly setup Go installation, do:
 
-`go get -u github.com/landoop/schema-registry/schema-registry-cli`
+`go get -u github.com/wildbeavers/schema-registry/schema-registry-cli`
 
 After that, the CLI is found in `$GOPATH/bin/schema-registry-cli`. Running `schema-registry-cli` without arguments gives:
 
@@ -47,13 +41,12 @@ Use "schema-registry-cli [command] --help" for more information about a command.
 
 The schema registry url can be configured through the `SCHEMA_REGISTRY_URL` environment variable, and overridden through `--url`. When none is provided, `http://localhost:8081` is used as default.
 
-Client
-------
+# Client
 
 The client package provides a client to deal with the registry from code. It is used by the CLI internally. Usage looks like:
 
 ```go
-import "github.com/landoop/schema-registry"
+import "github.com/wildbeavers/schema-registry"
 
 client, _ := schemaregistry.NewClient(schemaregistry.DefaultUrl)
 client.Subjects()
@@ -67,7 +60,7 @@ import (
     "crypto/x509"
     "io/ioutil"
 
-    "github.com/landoop/schema-registry"
+    "github.com/wildbeavers/schema-registry"
 )
 
 // Create a TLS config to use to connect to Schema Registry. This config will permit TLS connections to an endpoint
@@ -98,4 +91,4 @@ client, _ := schemaregistry.NewClient(baseurl, UsingClient(httpsClient))
 client.Subjects()
 ```
 
-The documentation of the package can be found here: [![GoDoc](https://godoc.org/github.com/Landoop/schema-registry?status.svg)](https://godoc.org/github.com/Landoop/schema-registry)
+The documentation of the package can be found here: [![GoDoc](https://godoc.org/github.com/wildbeavers/schema-registry?status.svg)](https://godoc.org/github.com/wildbeavers/schema-registry)
